@@ -2,24 +2,47 @@
 
 Task management per un piccolo team: Cliente → Cluster → Attività → Checklist. JavaScript nativo, Vite, Supabase ed export Excel. Interfaccia in italiano, desktop/tablet, membri aggiungibili e modificabili con avatar.
 
-## Avvio rapido della demo
+## Apertura su Microsoft Windows e Microsoft Edge
 
-Su Mac puoi aprire **`Avvia ENG.command`** con doppio clic: usa Node disponibile, installa le dipendenze se mancanti e apre il browser all’indirizzo corretto. Al primo avvio senza configurazione prepara la demo locale. Lascia aperta la finestra Terminale durante l’utilizzo. **Non aprire direttamente `index.html`**: l’app richiede il server locale per caricare i moduli JavaScript.
+Questa è la procedura consigliata per Windows 10 o Windows 11. **Non aprire direttamente `index.html`**: l’app richiede il piccolo server locale avviato dal file Windows incluso nel progetto.
 
-Richiede Node.js **22.12 o successivo**; Node 24 è consigliato. Installa Node dal sito ufficiale, quindi apri un terminale nella cartella del progetto.
+### Prima apertura
 
-```sh
+1. Scarica il progetto da GitHub: apri la pagina del repository, premi **Code → Download ZIP** e salva il file sul PC.
+2. In Esplora file fai clic destro sullo ZIP, scegli **Estrai tutto** e apri la cartella estratta `to-do-list-main` (il nome può essere `to-do-list` in un pacchetto locale). È la cartella che contiene `package.json`. Non avviare l’app mentre è ancora dentro lo ZIP.
+3. Installa [Node.js](https://nodejs.org/en/download) **22.12 o successivo** per Windows; Node 24 è consigliato. Usa il programma di installazione `.msi` e lascia attive le opzioni predefinite, incluso npm.
+4. Dopo l’installazione chiudi e riapri Esplora file, quindi torna nella cartella `to-do-list`.
+5. Fai doppio clic su **`Avvia ENG su Windows.bat`**. Alla prima apertura la finestra del Prompt installa automaticamente le dipendenze: servono connessione Internet e alcuni minuti.
+6. Al termine si apre Microsoft Edge all’indirizzo locale corretto, simile a `http://127.0.0.1:5173`. Lascia aperta la finestra del Prompt per tutta la durata del lavoro.
+7. In Edge premi **Apri demo locale** e scegli il membro che sta lavorando. Se hai già collegato Supabase, compare invece la schermata di accesso condiviso.
+
+### Aperture successive
+
+1. Apri la cartella `to-do-list`.
+2. Fai doppio clic su **`Avvia ENG su Windows.bat`**.
+3. Lavora nella scheda aperta in Microsoft Edge. Puoi aggiungerla ai Preferiti, ma l’app deve essere avviata dal file `.bat` prima di usare il preferito.
+4. Quando hai finito, chiudi la scheda di Edge e poi la finestra del Prompt. La chiusura del Prompt arresta il server locale.
+
+Il launcher usa una porta diversa se la 5173 è già occupata e apre automaticamente l’indirizzo corretto. Se Edge mostra temporaneamente “Impossibile raggiungere il sito”, controlla che la finestra del Prompt sia ancora aperta e aggiorna la pagina. Se compare “Node non è riconosciuto”, reinstalla Node.js e riavvia Windows.
+
+La demo include 4 membri modificabili, 5 clienti fittizi, 8 cluster, 32 attività e 75 sotto-attività. Salva i dati soltanto nel profilo Edge del PC: la modalità InPrivate, la cancellazione dei dati del sito o l’uso di un altro computer non conserva la demo. Per sincronizzare più PC usa Supabase seguendo i capitoli 1–4.
+
+### Avvio manuale da PowerShell
+
+Se non vuoi usare il file `.bat`, apri la cartella in Esplora file, fai clic nella barra dell’indirizzo, scrivi `powershell` e premi Invio. Esegui:
+
+```powershell
 npm install
-cp .env.example .env.local
-```
-
-In `.env.local` imposta `VITE_DEMO_MODE=true`, lascia vuoti URL e chiave Supabase e avvia:
-
-```sh
+Copy-Item .env.example .env.local
+(Get-Content .env.local) -replace 'VITE_DEMO_MODE=false', 'VITE_DEMO_MODE=true' | Set-Content .env.local
 npm run dev
 ```
 
-Apri [http://127.0.0.1:5173](http://127.0.0.1:5173), premi **Apri demo locale**, scegli un membro. Sono inclusi 4 membri modificabili, 5 clienti fittizi, 8 cluster, 32 attività e 75 sotto-attività. La demo salva solo nel browser: non sincronizza con altri dispositivi e non simula un login Supabase. Chiudendo la scheda termina la scelta del membro; riaprendo la demo i dati locali restano.
+Apri in Microsoft Edge l’indirizzo mostrato nella finestra PowerShell. Il comando `npm install` serve soltanto alla prima configurazione o dopo un aggiornamento delle dipendenze.
+
+### Uso su macOS
+
+Su Mac resta disponibile **`Avvia ENG.command`**: aprilo con doppio clic e lascia aperta la finestra Terminale. In alternativa usa gli stessi comandi npm da Terminale.
 
 Per installazioni riproducibili è incluso `pnpm-lock.yaml`: con pnpm 11 o successivo usare `pnpm install --frozen-lockfile` e `pnpm dev`. Le impostazioni di build e l’override della dipendenza UUID sono forniti sia per npm sia per pnpm.
 

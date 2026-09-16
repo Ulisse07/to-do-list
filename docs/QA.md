@@ -36,7 +36,7 @@ Verifiche eseguite su macOS, Node 24.19.0, pnpm 11.19.0 e browser integrato Chro
 | 22 | Desktop/tablet | Verifica visiva desktop 1440×1000 e tablet 768×1024; menu, report e pannelli utilizzabili, senza overflow orizzontale della pagina. Controlli sidebar verificati anche con altezza 720 px. |
 | 23 | Nessuna chiave segreta | Nessuna credenziale reale nel codice o nella consegna. Test della build: chiavi secret, JWT service role e variabili VITE non previste vengono rifiutati prima del bundling. |
 | 24 | Console | Nessun errore o warning applicativo rilevato nei normali flussi controllati nel browser. |
-| 25 | Installazione dal README | Copia pulita installata con lockfile; controlli e build eseguiti. Launcher Mac incluso, sintassi verificata. Per Supabase seguire anche il collaudo remoto sotto. |
+| 25 | Installazione dal README | Copia pulita installata con lockfile; controlli e build eseguiti. Launcher Mac verificato; launcher Windows e tutorial Edge inclusi e controllati staticamente, da provare anche su un PC Windows reale. Per Supabase seguire il collaudo remoto sotto. |
 
 ## Prove aggiuntive
 
