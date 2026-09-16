@@ -1,0 +1,20 @@
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { createDemo } from '../js/demo.js';
+const anchor='2026-09-14';
+const data=createDemo(anchor);
+const quote=value=>value===null||value===undefined?'null':typeof value==='boolean'?String(value):typeof value==='number'?String(value):`'${String(value).replaceAll("'","''")}'`;
+const date=value=>{
+  if(!value)return 'null';
+  const delta=Math.round((new Date(value.slice(0,10))-new Date(anchor))/86400000);
+  return value.length===10?`(current_date + (${delta}))`:`((current_date + (${delta}) + time '${value.slice(11,19)}') at time zone 'Europe/Rome')`;
+};
+const insert=(table,rows)=>rows.map(row=>`insert into public.${table} (${Object.keys(row).join(', ')}) values (${Object.entries(row).map(([key,v])=>key.endsWith('_at')||key==='due_date'?date(v):quote(v)).join(', ')}) on conflict do nothing;`).join('\n');
+const members=insert('team_members',data.members);
+const taskRows=data.tasks.map(({assignee_ids,checklist,...t})=>t);
+const assignments=data.tasks.flatMap(t=>t.assignee_ids.map(team_member_id=>({task_id:t.id,team_member_id})));
+const checklistRows=data.tasks.flatMap(t=>t.checklist.map(({assignee_ids,...i})=>({...i,task_id:t.id})));
+const checklistAssignments=data.tasks.flatMap(t=>t.checklist.flatMap(i=>i.assignee_ids.map(team_member_id=>({checklist_item_id:i.id,team_member_id}))));
+mkdirSync('sql',{recursive:true});
+writeFileSync('sql/members.sql',`-- Initial editable team. No real names were supplied.\nbegin;\n${members}\ncommit;\n`);
+writeFileSync('sql/seed.sql',`-- Optional fictional demo data; dates relative to execution day.\n-- Idempotent inserts: existing records are never overwritten.\nbegin;\n${members}\n${insert('clients',data.clients)}\n${insert('clusters',data.clusters)}\n${insert('tasks',taskRows)}\n${insert('task_assignees',assignments)}\n${insert('checklist_items',checklistRows)}\n${insert('checklist_assignees',checklistAssignments)}\n${insert('activity_log',data.activity.map(a=>({...a,details:JSON.stringify(a.details)})))}\ncommit;\n`);
+console.log(`Seed: ${data.members.length} membri, ${data.clients.length} clienti, ${data.clusters.length} cluster, ${taskRows.length} attività, ${checklistRows.length} sotto-attività.`);

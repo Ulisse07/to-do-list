@@ -1,0 +1,7 @@
+-- Initial editable team. No real names were supplied.
+begin;
+insert into public.team_members (id, name, role, color, avatar, active, created_at, updated_at) values ('00000000-0000-4000-8000-000000000001', 'Membro 1', 'Project management', '#527260', '', true, ((current_date + (-30) + time '09:00:00') at time zone 'Europe/Rome'), ((current_date + (-1) + time '09:00:00') at time zone 'Europe/Rome')) on conflict do nothing;
+insert into public.team_members (id, name, role, color, avatar, active, created_at, updated_at) values ('00000000-0000-4000-8000-000000000002', 'Membro 2', 'Business analysis', '#8871a5', '', true, ((current_date + (-30) + time '09:00:00') at time zone 'Europe/Rome'), ((current_date + (-1) + time '09:00:00') at time zone 'Europe/Rome')) on conflict do nothing;
+insert into public.team_members (id, name, role, color, avatar, active, created_at, updated_at) values ('00000000-0000-4000-8000-000000000003', 'Membro 3', 'Delivery', '#ba8251', '', true, ((current_date + (-30) + time '09:00:00') at time zone 'Europe/Rome'), ((current_date + (-1) + time '09:00:00') at time zone 'Europe/Rome')) on conflict do nothing;
+insert into public.team_members (id, name, role, color, avatar, active, created_at, updated_at) values ('00000000-0000-4000-8000-000000000004', 'Membro 4', 'Operations', '#557eac', '', true, ((current_date + (-30) + time '09:00:00') at time zone 'Europe/Rome'), ((current_date + (-1) + time '09:00:00') at time zone 'Europe/Rome')) on conflict do nothing;
+commit;

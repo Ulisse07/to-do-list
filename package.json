@@ -1,0 +1,26 @@
+{
+  "name": "eng-task-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.js",
+    "check": "node scripts/check.mjs"
+  },
+  "overrides": { "exceljs": { "uuid": "11.1.1" } },
+  "dependencies": {
+    "@supabase/supabase-js": "2.116.0",
+    "exceljs": "4.4.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "vite": "8.3.0"
+  }
+}

@@ -1,0 +1,36 @@
+name: Verifica progetto
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v4
+      - name: Configura pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - name: Configura Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Installa dipendenze
+        run: pnpm install --frozen-lockfile
+      - name: Controlla sintassi e credenziali
+        run: pnpm check
+      - name: Esegui test
+        run: pnpm test
+      - name: Verifica build senza demo
+        run: pnpm build
+        env:
+          VITE_DEMO_MODE: "false"
