@@ -2,49 +2,17 @@
 
 Task management per un piccolo team: Cliente → Cluster → Attività → Checklist. JavaScript nativo, Vite, Supabase ed export Excel. Interfaccia in italiano, desktop/tablet, membri aggiungibili e modificabili con avatar.
 
-## Apertura su Microsoft Windows e Microsoft Edge
+## Uso quotidiano sul PC aziendale
 
-Questa è la procedura consigliata per Windows 10 o Windows 11. **Non aprire direttamente `index.html`**: l’app richiede il piccolo server locale avviato dal file Windows incluso nel progetto.
+Sul PC aziendale non devi installare o scaricare nulla. Non servono Node.js, npm, PowerShell, Prompt dei comandi, estensioni del browser o diritti di amministratore. L’app viene costruita sui server GitHub e pubblicata come normale sito HTTPS.
 
-### Prima apertura
+1. Apri Microsoft Edge.
+2. Vai a [https://ulisse07.github.io/to-do-list/](https://ulisse07.github.io/to-do-list/). L’indirizzo funziona dopo la prima pubblicazione descritta nel capitolo 5.
+3. Accedi con l’email e la password condivise, quindi scegli il membro che sta lavorando.
+4. In Edge premi la stella nella barra degli indirizzi e salva la pagina nei Preferiti.
+5. Le volte successive apri soltanto quel Preferito. Puoi chiudere Edge normalmente a fine lavoro.
 
-1. Scarica il progetto da GitHub: apri la pagina del repository, premi **Code → Download ZIP** e salva il file sul PC.
-2. In Esplora file fai clic destro sullo ZIP, scegli **Estrai tutto** e apri la cartella estratta `to-do-list-main` (il nome può essere `to-do-list` in un pacchetto locale). È la cartella che contiene `package.json`. Non avviare l’app mentre è ancora dentro lo ZIP.
-3. Installa [Node.js](https://nodejs.org/en/download) **22.12 o successivo** per Windows; Node 24 è consigliato. Usa il programma di installazione `.msi` e lascia attive le opzioni predefinite, incluso npm.
-4. Dopo l’installazione chiudi e riapri Esplora file, quindi torna nella cartella `to-do-list`.
-5. Fai doppio clic su **`Avvia ENG su Windows.bat`**. Alla prima apertura la finestra del Prompt installa automaticamente le dipendenze: servono connessione Internet e alcuni minuti.
-6. Al termine si apre Microsoft Edge all’indirizzo locale corretto, simile a `http://127.0.0.1:5173`. Lascia aperta la finestra del Prompt per tutta la durata del lavoro.
-7. In Edge premi **Apri demo locale** e scegli il membro che sta lavorando. Se hai già collegato Supabase, compare invece la schermata di accesso condiviso.
-
-### Aperture successive
-
-1. Apri la cartella `to-do-list`.
-2. Fai doppio clic su **`Avvia ENG su Windows.bat`**.
-3. Lavora nella scheda aperta in Microsoft Edge. Puoi aggiungerla ai Preferiti, ma l’app deve essere avviata dal file `.bat` prima di usare il preferito.
-4. Quando hai finito, chiudi la scheda di Edge e poi la finestra del Prompt. La chiusura del Prompt arresta il server locale.
-
-Il launcher usa una porta diversa se la 5173 è già occupata e apre automaticamente l’indirizzo corretto. Se Edge mostra temporaneamente “Impossibile raggiungere il sito”, controlla che la finestra del Prompt sia ancora aperta e aggiorna la pagina. Se compare “Node non è riconosciuto”, reinstalla Node.js e riavvia Windows.
-
-La demo include 4 membri modificabili, 5 clienti fittizi, 8 cluster, 32 attività e 75 sotto-attività. Salva i dati soltanto nel profilo Edge del PC: la modalità InPrivate, la cancellazione dei dati del sito o l’uso di un altro computer non conserva la demo. Per sincronizzare più PC usa Supabase seguendo i capitoli 1–4.
-
-### Avvio manuale da PowerShell
-
-Se non vuoi usare il file `.bat`, apri la cartella in Esplora file, fai clic nella barra dell’indirizzo, scrivi `powershell` e premi Invio. Esegui:
-
-```powershell
-npm install
-Copy-Item .env.example .env.local
-(Get-Content .env.local) -replace 'VITE_DEMO_MODE=false', 'VITE_DEMO_MODE=true' | Set-Content .env.local
-npm run dev
-```
-
-Apri in Microsoft Edge l’indirizzo mostrato nella finestra PowerShell. Il comando `npm install` serve soltanto alla prima configurazione o dopo un aggiornamento delle dipendenze.
-
-### Uso su macOS
-
-Su Mac resta disponibile **`Avvia ENG.command`**: aprilo con doppio clic e lascia aperta la finestra Terminale. In alternativa usa gli stessi comandi npm da Terminale.
-
-Per installazioni riproducibili è incluso `pnpm-lock.yaml`: con pnpm 11 o successivo usare `pnpm install --frozen-lockfile` e `pnpm dev`. Le impostazioni di build e l’override della dipendenza UUID sono forniti sia per npm sia per pnpm.
+Non aprire `index.html`, non scaricare il repository e non usare i launcher locali sul PC aziendale. La modalità condivisa salva su Supabase e permette di lavorare da più PC. La demo salva invece soltanto nel profilo Edge corrente e serve per una prova iniziale.
 
 ## 1. Creare il progetto Supabase
 
@@ -71,48 +39,45 @@ Per una prova con dati fittizi esegui anche [`sql/seed.sql`](sql/seed.sql). Il s
 2. Usa un indirizzo controllato dal team e condividi la password tramite un gestore password. Nessuna password va nei file del progetto.
 3. Disabilita le nuove registrazioni pubbliche nelle impostazioni Auth. Mantieni attivo il provider email/password. Per consentire il lavoro contemporaneo, non attivare limitazioni a una singola sessione per utente.
 4. Esegui [`sql/authorize_shared_account.sql`](sql/authorize_shared_account.sql). Autorizza l’unico utente Auth presente. Se gli utenti sono più di uno, lo script si ferma senza concedere accessi: verifica la configurazione del progetto dedicato.
-5. Configura l’URL dell’app nelle impostazioni URL di Auth: quello locale durante lo sviluppo e il dominio HTTPS definitivo dopo il deploy.
+5. Configura nelle impostazioni URL di Auth il Site URL `https://ulisse07.github.io/to-do-list/`.
 
 Solo l’UUID autorizzato in `private.workspace_access` può leggere e modificare il workspace. Un altro account autenticato non riceve dati. La scelta del membro nell’app serve per personalizzazione e storico operativo, non costituisce un secondo login e non certifica l’identità personale.
 
-## 4. Configurare le variabili pubbliche
+## 4. Configurare l’app da GitHub
 
-Nel file `.env.local` inserisci il Project URL in `VITE_SUPABASE_URL`, la chiave pubblica in `VITE_SUPABASE_PUBLISHABLE_KEY` e imposta **`VITE_DEMO_MODE=false`**. Riavvia il server dopo ogni modifica alle variabili.
+Tutta la configurazione si esegue dal browser. Apri il repository `Ulisse07/to-do-list`, quindi **Settings → Secrets and variables → Actions**.
 
-Le variabili `VITE_` sono visibili nel browser. Il progetto accetta solo le tre variabili documentate; la build rifiuta chiavi `sb_secret_` e JWT con ruolo diverso da `anon`. Non inserire service role key, password, token personali o credenziali database. La sicurezza dei dati deriva da Auth, RLS e dai controlli delle RPC, non dalla segretezza della chiave pubblica.
+Nella scheda **Variables** crea:
 
-Il file `.env.example` contiene soltanto i nomi delle variabili. `.env.local` è escluso da Git. In assenza di configurazione l’app mostra una schermata di configurazione; non passa automaticamente alla demo.
+- `VITE_SUPABASE_URL` con il Project URL di Supabase;
+- `VITE_DEMO_MODE` con valore `false`.
 
-## 5. Installare, avviare e controllare
+Nella scheda **Secrets** crea `VITE_SUPABASE_PUBLISHABLE_KEY` e inserisci la chiave pubblica publishable. La chiave è destinata al frontend, ma viene conservata qui per evitare modifiche manuali ai file.
 
-```sh
-npm install
-npm run check
-npm test
-npm run dev
-```
+Non inserire password, service role key, token personali o credenziali database. La build accetta solo le tre variabili documentate e rifiuta chiavi `sb_secret_`, JWT con ruolo diverso da `anon` e altre variabili frontend. La sicurezza dei dati deriva da Auth, RLS e RPC, non dalla segretezza della chiave pubblica.
 
-Il test suite include PostgreSQL in WebAssembly (PGlite), senza Docker e senza un account Supabase. Esegue gli stessi SQL del progetto con ruoli e identità Auth di test, verifica RLS, transazioni, conflitti, anagrafiche e relazioni. Il test Excel genera e riapre il workbook. Questi test non sostituiscono il collaudo finale di Auth/PostgREST nel progetto Supabase remoto.
+## 5. Prima pubblicazione online
 
-## 6. Deploy
+1. Nel repository apri **Settings → Pages**.
+2. In **Build and deployment → Source** scegli **GitHub Actions**. Questa è un’impostazione da fare una sola volta.
+3. Apri la scheda **Actions** del repository.
+4. Seleziona **Pubblica sito senza installazioni**.
+5. Premi **Run workflow**, lascia selezionato `main` e conferma con **Run workflow**.
+6. Attendi il segno di spunta verde. La procedura installa, controlla, testa e costruisce l’app sui server GitHub.
+7. Apri [https://ulisse07.github.io/to-do-list/](https://ulisse07.github.io/to-do-list/) in Microsoft Edge.
+8. In Supabase imposta questo stesso indirizzo come **Site URL** nelle impostazioni Auth, quindi esegui il collaudo in [`docs/QA.md`](docs/QA.md).
 
-L’app è un sito statico. Usa il servizio di hosting HTTPS aziendale o un hosting statico compatibile con Vite.
+Se le variabili Supabase non sono ancora configurate, il workflow pubblica la demo. Dopo aver completato il capitolo 4, esegui di nuovo il workflow per passare alla modalità condivisa.
 
-1. Imposta in ambiente di build i tre valori pubblici, con **demo disabilitata**.
-2. Installa le dipendenze dal lockfile con `pnpm install --frozen-lockfile` oppure usa `npm install`.
-3. Comando build: `npm run build` (oppure `pnpm build`). Cartella da pubblicare: **`dist`**.
-4. Imposta Node 22.12+ sul servizio. La navigazione usa hash, quindi non richiede regole di riscrittura delle sette viste. La base relativa consente anche una sottocartella.
-5. Aggiorna il Site URL di Supabase al dominio definitivo. Pubblica solo `dist`, mai il progetto completo, `.env.local`, cartelle di test o backup.
-6. Prova il login da due browser distinti, il salvataggio condiviso, il cambio membro e il refresh. Esegui il collaudo riportato in [`docs/QA.md`](docs/QA.md).
+GitHub Pages pubblica il frontend su Internet anche quando il repository è privato. Il sito non contiene password o dati aziendali e Supabase protegge i dati con login e RLS. Verifica comunque che GitHub Pages sia consentito dalla policy aziendale. Se l’opzione Pages non è disponibile per il piano GitHub o il dominio `github.io` è bloccato, consegna la cartella `dist` all’IT per un hosting HTTPS aziendale o Azure Static Web Apps; l’architettura dell’app non cambia.
 
-Per provare localmente la build:
+## 6. Aggiornamenti e controlli
 
-```sh
-npm run build
-npm run preview
-```
+Dopo ogni aggiornamento del codice, apri **Actions → Pubblica sito senza installazioni → Run workflow**. La nuova versione sostituisce quella precedente senza operazioni sul PC aziendale.
 
-La demo eventualmente attiva in `.env.local` viene inclusa nella build locale. Prima di una build destinata all’uso reale imposta `VITE_DEMO_MODE=false`; le variabili dell’hosting devono essere esplicite. Non è stato effettuato alcun deploy automatico.
+Il workflow esegue controllo sintassi, verifica credenziali, 18 test automatici e build. I test includono PostgreSQL in WebAssembly, RLS, transazioni, conflitti, anagrafiche, relazioni ed Excel. Non sostituiscono il collaudo finale di Auth e sincronizzazione sul progetto Supabase remoto.
+
+Node 24 e pnpm vengono usati soltanto dal runner temporaneo GitHub. Per manutenzione tecnica su un computer autorizzato restano disponibili `Avvia ENG.command`, `Avvia ENG su Windows.bat` e i comandi `pnpm install --frozen-lockfile`, `pnpm test` e `pnpm build`; non servono agli utilizzatori aziendali.
 
 ## 7. Aggiungere, modificare o rimuovere membri
 

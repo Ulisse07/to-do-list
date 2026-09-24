@@ -1,6 +1,12 @@
 # ENG Workspace — architettura
 
-Applicazione client in HTML, CSS e JavaScript ES modules, compilata con Vite. Supabase fornisce autenticazione e PostgreSQL. ExcelJS viene caricato solo quando serve l’export. Nessun server Node da mantenere in produzione.
+Applicazione client in HTML, CSS e JavaScript ES modules, compilata con Vite sui runner GitHub e pubblicata come sito statico HTTPS. Supabase fornisce autenticazione e PostgreSQL. ExcelJS viene caricato solo quando serve l’export. Il PC aziendale usa soltanto Microsoft Edge: Node, npm, terminale, estensioni e diritti amministrativi non sono richiesti.
+
+## Distribuzione senza installazioni
+
+Il workflow `deploy-pages.yml` viene avviato manualmente dall’interfaccia web di GitHub. Installa e verifica il progetto su un runner temporaneo, genera `dist` con base `/to-do-list/` e lo pubblica su GitHub Pages. Le variabili pubbliche Supabase vengono lette da GitHub Actions durante la build. Se non sono ancora configurate, il workflow pubblica la demo locale al browser; impostando `VITE_DEMO_MODE=false` pubblica la modalità condivisa.
+
+GitHub Pages distribuisce soltanto asset statici e può essere raggiungibile pubblicamente. Il bundle non contiene password, service role key o dati del workspace. L’accesso ai dati resta protetto da Supabase Auth, RLS e RPC. La pagina pubblica non rende pubblici i dati, ma il collaudo remoto deve verificare questa separazione prima dell’uso aziendale.
 
 ## Strati e responsabilità
 

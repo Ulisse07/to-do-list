@@ -1,10 +1,10 @@
 # ENG Workspace — collaudo di consegna
 
-Data: **16 settembre 2026**. Consegna locale, versione 1.0.0.
+Data iniziale: **16 settembre 2026**. Architettura senza installazioni aggiornata il **24 settembre 2026**, versione 1.0.0.
 
 ## Esito e perimetro
 
-L’app è utilizzabile in demo locale. Sono disponibili implementazione Supabase, schema, policy, seed e istruzioni di configurazione. **Il progetto Supabase non è stato creato né collegato:** login remoto, API ospitata, sincronizzazione tra dispositivi e deploy richiedono il collaudo di messa in servizio descritto sotto. Il login demo non è una verifica del login Supabase.
+L’app è utilizzabile in demo ed è predisposta per la pubblicazione su GitHub Pages senza installazioni sul PC aziendale. Sono disponibili workflow, implementazione Supabase, schema, policy, seed e istruzioni di configurazione. **Il progetto Supabase non è stato creato né collegato e GitHub Pages non è stato ancora abilitato:** login remoto, API ospitata, sincronizzazione tra dispositivi e pubblicazione richiedono il collaudo di messa in servizio descritto sotto. Il login demo non è una verifica del login Supabase.
 
 Verifiche eseguite su macOS, Node 24.19.0, pnpm 11.19.0 e browser integrato Chromium. Installazione da una copia pulita con `pnpm install --frozen-lockfile`, controllo sintassi, test e build. L’installazione iniziale richiede accesso al registro npm; non è garantita offline.
 
@@ -36,7 +36,7 @@ Verifiche eseguite su macOS, Node 24.19.0, pnpm 11.19.0 e browser integrato Chro
 | 22 | Desktop/tablet | Verifica visiva desktop 1440×1000 e tablet 768×1024; menu, report e pannelli utilizzabili, senza overflow orizzontale della pagina. Controlli sidebar verificati anche con altezza 720 px. |
 | 23 | Nessuna chiave segreta | Nessuna credenziale reale nel codice o nella consegna. Test della build: chiavi secret, JWT service role e variabili VITE non previste vengono rifiutati prima del bundling. |
 | 24 | Console | Nessun errore o warning applicativo rilevato nei normali flussi controllati nel browser. |
-| 25 | Installazione dal README | Copia pulita installata con lockfile; controlli e build eseguiti. Launcher Mac verificato; launcher Windows e tutorial Edge inclusi e controllati staticamente, da provare anche su un PC Windows reale. Per Supabase seguire il collaudo remoto sotto. |
+| 25 | Utilizzo dal README | Il PC aziendale usa soltanto l’URL HTTPS in Edge. Installazione, test e build vengono eseguiti da GitHub Actions. Il workflow Pages e il percorso `/to-do-list/` sono verificati localmente; la prima pubblicazione e Supabase remoto richiedono il collaudo online descritto sotto. |
 
 ## Prove aggiuntive
 
@@ -46,6 +46,7 @@ Verifiche eseguite su macOS, Node 24.19.0, pnpm 11.19.0 e browser integrato Chro
 - Disattivazione dell’ultimo membro attivo impedita; archiviazione di anagrafiche senza cancellazioni a cascata.
 - Test Excel con testo simile a una formula: conservato come testo, non eseguito come formula.
 - Il controllo dipendenze del 14 settembre 2026 ha riportato zero vulnerabilità note dopo l’override UUID di ExcelJS. È una verifica puntuale, da ripetere nel tempo.
+- La build con base `/to-do-list/` è stata servita dal percorso previsto per GitHub Pages: apertura demo, selezione membro e dashboard verificate nel browser senza errori di console.
 
 Il test suite riporta **18 test superati, 0 falliti**. I test del database usano PostgreSQL in WebAssembly, con ruoli Auth simulati; non avviano l’infrastruttura Supabase completa.
 

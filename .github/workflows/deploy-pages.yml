@@ -1,0 +1,55 @@
+name: Pubblica sito senza installazioni
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v6
+      - name: Configura pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - name: Configura Node sui server GitHub
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Installa dipendenze sui server GitHub
+        run: pnpm install --frozen-lockfile
+      - name: Controlla il progetto
+        run: pnpm check
+      - name: Esegui i test
+        run: pnpm test
+      - name: Crea il sito
+        run: pnpm build
+        env:
+          BASE_PATH: /to-do-list/
+          VITE_DEMO_MODE: ${{ vars.VITE_DEMO_MODE || 'true' }}
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      - name: Configura GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Prepara i file da pubblicare
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - name: Pubblica il sito
+        id: deployment
+        uses: actions/deploy-pages@v4
